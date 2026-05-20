@@ -101,10 +101,43 @@ const sections = {
       "MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto",
     ],
   },
+  dingtalkWiki: {
+    title: "钉钉 -> 知识库",
+    commands: [
+      "npm run index:tech-center",
+      "npm run analyze:tech-center",
+      "npm run report:tech-center",
+      "npm run index:management-innovation",
+      "npm run registry:management-innovation",
+      "npm run analyze:management-innovation",
+      "npm run report:management-innovation",
+      "MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto",
+      "npm run batch:digital-drive-algorithm-group:top20",
+      "PDF_LOAD_FAILURE_RETRY_LIMIT=5 npm run sync:digital-drive-algorithm-group:top20:md",
+      "npm run analyze:digital-drive-algorithm-group",
+      "npm run report:digital-drive-algorithm-group",
+    ],
+  },
+  dingtalkLogs: {
+    title: "钉钉 -> 日志 / 日报",
+    commands: [
+      "npm run sync:logs",
+      "npm run token:user",
+    ],
+  },
+  dingtalkMeeting: {
+    title: "钉钉 -> 会议纪要",
+    commands: [
+      "npm run sync:meeting-minutes:all:fast",
+      "npm run sync:meeting-minutes:vault:push",
+      "npm run sync:meeting-minutes:all:fast:push",
+      "npm run status:meeting-minutes",
+    ],
+  },
 };
 
 const aliases = {
-  all: ["setup", "config", "query", "fetch", "syncback", "management", "digital", "meeting", "catalog", "lowlevel"],
+  all: ["setup", "config", "query", "fetch", "syncback", "dingtalkWiki", "dingtalkLogs", "dingtalkMeeting", "management", "digital", "meeting", "catalog", "lowlevel"],
   mi: ["management"],
   management: ["management"],
   dd: ["digital"],
@@ -119,13 +152,16 @@ const aliases = {
   fetch: ["fetch"],
   sync: ["syncback"],
   syncback: ["syncback"],
+  "dingtalk-wiki": ["dingtalkWiki"],
+  "dingtalk-logs": ["dingtalkLogs"],
+  "dingtalk-meeting": ["dingtalkMeeting"],
 };
 
 const selected = aliases[topic];
 
 if (!selected) {
   console.error(`Unknown topic: ${topic}`);
-  console.error("Available topics: all, setup, config, query, fetch, sync, management, digital, meeting, catalog, lowlevel");
+  console.error("Available topics: all, setup, config, query, fetch, sync, dingtalk-wiki, dingtalk-logs, dingtalk-meeting, management, digital, meeting, catalog, lowlevel");
   process.exit(1);
 }
 

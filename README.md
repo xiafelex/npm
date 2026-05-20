@@ -23,6 +23,9 @@ npm run help:config
 npm run help:query
 npm run help:fetch
 npm run help:sync
+npm run help:dingtalk-wiki
+npm run help:dingtalk-logs
+npm run help:dingtalk-meeting
 npm run help:management-innovation
 npm run help:digital-drive
 npm run help:meeting-minutes
@@ -93,7 +96,11 @@ npm run status:meeting-minutes
    - `npm run help:query`
    - `npm run help:fetch`
    - `npm run help:sync`
-2. 按板块：
+2. 按来源 + 内容类型：
+   - `npm run help:dingtalk-wiki`
+   - `npm run help:dingtalk-logs`
+   - `npm run help:dingtalk-meeting`
+3. 按板块：
    - `npm run help:management-innovation`
    - `npm run help:digital-drive`
    - `npm run help:meeting-minutes`

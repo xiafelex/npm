@@ -33,6 +33,9 @@ npm run help:config
 npm run help:query
 npm run help:fetch
 npm run help:sync
+npm run help:dingtalk-wiki
+npm run help:dingtalk-logs
+npm run help:dingtalk-meeting
 npm run help:management-innovation
 npm run help:digital-drive
 npm run help:meeting-minutes
@@ -214,6 +217,54 @@ npm run export:pdf
 npm run sync:meeting-minutes:vault:push
 npm run sync:meeting-minutes:all:fast:push
 MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto
+```
+
+## 按来源 + 内容类型分类
+
+### 1. 钉钉 -> 知识库
+
+这里统一覆盖：
+
+- 技术中心总表
+- 管理创新
+- 数字驱动
+- 中心办公
+
+先看这类命令：
+
+```bash
+npm run help:dingtalk-wiki
+```
+
+### 2. 钉钉 -> 日志 / 日报
+
+这类和知识库不是同一层，先看：
+
+```bash
+npm run help:dingtalk-logs
+```
+
+当前主要是：
+
+```bash
+npm run sync:logs
+npm run token:user
+```
+
+### 3. 钉钉 -> 会议纪要
+
+这类是专项流，先看：
+
+```bash
+npm run help:dingtalk-meeting
+```
+
+当前主要是：
+
+```bash
+npm run sync:meeting-minutes:all:fast
+npm run sync:meeting-minutes:vault:push
+npm run status:meeting-minutes
 ```
 
 ## 规则
