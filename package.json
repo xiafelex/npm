@@ -5,6 +5,11 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check-config.mjs",
+    "help": "node scripts/print-command-index.mjs",
+    "help:management-innovation": "node scripts/print-command-index.mjs management",
+    "help:digital-drive": "node scripts/print-command-index.mjs digital",
+    "help:meeting-minutes": "node scripts/print-command-index.mjs meeting",
+    "help:catalog": "node scripts/print-command-index.mjs catalog",
     "sync": "node scripts/sync.mjs",
     "sync:wiki": "node scripts/sync.mjs wiki",
     "sync:wiki-section": "node scripts/sync-wiki-section.mjs",

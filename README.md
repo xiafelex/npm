@@ -1,91 +1,87 @@
-# DingTalk Sync Runner Branch
+# xiafelex/npm
 
-这个说明面向测试分支 `codex/dingtalk-sync-runner`。
+这个仓库现在的定位很简单：
 
-## 目标
+- **它是命令仓**
+- 专门放各种要本地执行的 `npm` 命令、Playwright 脚本和运行说明
 
-这个分支提供一个“可 clone、可安装、可直接运行”的执行仓副本，用来抓取钉钉知识库，并把结果同步回 `ai-memory-vault` 主分支所承载的状态体系。
+状态和抓取结果不放这里，状态仓仍然是：
 
-## 仓库角色
+- `ai-memory-vault`
 
-- `main`
-  - 状态仓
-  - 保存 `raw-md / sync-registry / report / runbook`
-- `codex/dingtalk-sync-runner`
-  - 执行分支
-  - 保存可运行的 `npm + Playwright + scripts`
+## 你怎么找命令最快
 
-## clone 后怎么用
+### 1. 先看命令总表
 
-```bash
-git clone --branch codex/dingtalk-sync-runner https://github.com/xiafelex/ai-memory-vault.git
-cd ai-memory-vault/tooling/dingtalk-sync-runner
-```
+- [docs/COMMAND_INDEX.md](docs/COMMAND_INDEX.md)
 
-如果你用 SSH：
+### 2. 或者直接在终端里查
 
 ```bash
-git clone --branch codex/dingtalk-sync-runner git@github.com:xiafelex/ai-memory-vault.git
-cd ai-memory-vault/tooling/dingtalk-sync-runner
+npm run help
+npm run help:management-innovation
+npm run help:digital-drive
+npm run help:meeting-minutes
+npm run help:catalog
 ```
-
-## 目录说明
-
-执行代码在这里：
-
-- `tooling/dingtalk-sync-runner/`
-
-里面包含：
-
-- `package.json`
-- `package-lock.json`
-- `scripts/`
-- `.env.example`
-- `docs/`
 
 ## 环境准备
 
 ```bash
 npm install
 npx playwright install chromium
-cp .env.example .env
+cp .env.shared .env
+npm run check
 ```
 
-然后编辑 `.env`，至少填：
-
-- `DINGTALK_APP_KEY`
-- `DINGTALK_APP_SECRET`
-- `DINGTALK_OPERATOR_ID`
-
-## 浏览器
-
-脚本优先尝试系统 Chrome。
-
-如果 Chrome 不在默认位置，可以先设置：
+如果系统 Chrome 不在默认位置，先设置：
 
 ```bash
 export PDF_BROWSER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 ```
 
-## 管理创新：整棵自动抓取
+## 最常用命令
+
+### 管理创新整棵自动抓取
 
 ```bash
 MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto
 ```
 
-## 先预览，不抓取
+### 数字驱动-数据算法研究组一轮 20 篇
 
 ```bash
-npm run registry:management-innovation
-npm run analyze:management-innovation
-npm run report:management-innovation
-npm run batch:management-innovation:auto
+npm run batch:digital-drive-algorithm-group:top20
+PDF_LOAD_FAILURE_RETRY_LIMIT=5 npm run sync:digital-drive-algorithm-group:top20:md
+npm run analyze:digital-drive-algorithm-group
+npm run report:digital-drive-algorithm-group
 ```
 
-## 关键规则
+### 会议纪要快速抓取
 
-1. 先对比 `nodeId + modifiedTime + needsSync`
-2. 只抓当前版本还没落到 `ui_md_current` 的文档
-3. 按层级路径排序，尽量保持上下级连续
-4. Git 同步失败时继续抓，不重复下载已经抓到的文档
-5. 页面加载失败时自动刷新重试；多次失败后跳过并记日志
+```bash
+npm run sync:meeting-minutes:all:fast
+npm run status:meeting-minutes
+```
+
+## 文档入口
+
+- [docs/COMMAND_INDEX.md](docs/COMMAND_INDEX.md)
+- [docs/MANAGEMENT_INNOVATION_MULTI_DEVICE_RUNBOOK.md](docs/MANAGEMENT_INNOVATION_MULTI_DEVICE_RUNBOOK.md)
+- [docs/LOCAL_NPM_COMMANDS_MANAGEMENT_INNOVATION.md](docs/LOCAL_NPM_COMMANDS_MANAGEMENT_INNOVATION.md)
+
+## 仓库角色
+
+- `npm`
+  - 命令仓
+  - 放可执行脚本、命令、环境说明
+- `ai-memory-vault`
+  - 状态仓
+  - 放 `raw-md / sync-registry / report / runbook`
+
+## 原则
+
+1. 先在这个仓库找命令，再执行。
+2. 先用板块级命令，不要直接从底层脚本起手。
+3. 抓取前默认按 `nodeId + modifiedTime + needsSync` 做去重。
+4. Git 同步失败不应该浪费已完成下载，后面再补同步。
