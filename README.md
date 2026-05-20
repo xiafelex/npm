@@ -128,6 +128,7 @@ npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 `npm run doctor:sync` 会帮你快速判断：
 
 - 当前这台电脑正在用哪个命令仓
+- 本地有没有找到真正的执行工作区
 - 本地有没有找到记忆仓
 - 当前分支和远端是谁
 - `.env` 关键变量是否齐全
@@ -137,6 +138,12 @@ npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 
 ```bash
 export PDF_BROWSER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+```
+
+如果 `doctor:sync` 没自动找到你的执行工作区，可以手动指定：
+
+```bash
+export SYNC_WORKSPACE_DIR=/path/to/your/workspace
 ```
 
 ## 最常用命令

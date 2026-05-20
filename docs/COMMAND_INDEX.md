@@ -78,6 +78,18 @@ xnpm locate
 export XNPM_CONFIG_DIR=/some/writable/path
 ```
 
+`doctor:sync` 现在会尽量自动识别三类路径：
+
+- 命令仓
+- 执行工作区
+- 记忆仓
+
+如果执行工作区没识别出来，可以手动指定：
+
+```bash
+export SYNC_WORKSPACE_DIR=/path/to/your/workspace
+```
+
 ## 最常用入口
 
 ```bash
