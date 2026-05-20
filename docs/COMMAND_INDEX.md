@@ -23,11 +23,13 @@ npm install
 npx playwright install chromium
 cp .env.shared .env
 npm run check
+npm run doctor:sync
 ```
 
 ## 最常用入口
 
 ```bash
+npm run doctor:sync
 npm run help
 npm run help:config
 npm run help:query
@@ -54,8 +56,9 @@ npm run help:catalog
 所以通常顺序是：
 
 1. 在 `ai-memory-vault` 看已有状态
-2. 在这个 `npm` 仓里找并执行命令
-3. 再把结果同步回 `ai-memory-vault`
+2. 在这个 `npm` 仓先跑 `npm run doctor:sync`
+3. 再找并执行命令
+4. 再把结果同步回 `ai-memory-vault`
 
 ## 管理创新
 

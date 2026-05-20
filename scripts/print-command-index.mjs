@@ -8,6 +8,7 @@ const sections = {
       "npx playwright install chromium",
       "cp .env.shared .env",
       "npm run check",
+      "npm run doctor:sync",
     ],
   },
   management: {
@@ -67,6 +68,7 @@ const sections = {
       "npx playwright install chromium",
       "cp .env.shared .env",
       "npm run check",
+      "npm run doctor:sync",
     ],
   },
   query: {

@@ -18,6 +18,7 @@
 ### 2. 或者直接在终端里查
 
 ```bash
+npm run doctor:sync
 npm run help
 npm run help:config
 npm run help:query
@@ -39,7 +40,16 @@ npm install
 npx playwright install chromium
 cp .env.shared .env
 npm run check
+npm run doctor:sync
 ```
+
+`npm run doctor:sync` 会帮你快速判断：
+
+- 当前这台电脑正在用哪个命令仓
+- 本地有没有找到记忆仓
+- 当前分支和远端是谁
+- `.env` 关键变量是否齐全
+- 本地有没有各板块的台账和抓取状态
 
 如果系统 Chrome 不在默认位置，先设置：
 
@@ -112,3 +122,4 @@ npm run status:meeting-minutes
 2. 先用板块级命令，不要直接从底层脚本起手。
 3. 抓取前默认按 `nodeId + modifiedTime + needsSync` 做去重。
 4. Git 同步失败不应该浪费已完成下载，后面再补同步。
+5. 换电脑或切工作目录后，先跑一次 `npm run doctor:sync`。

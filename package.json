@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check-config.mjs",
+    "doctor": "node scripts/doctor-sync-workspace.mjs",
+    "doctor:sync": "node scripts/doctor-sync-workspace.mjs",
     "help": "node scripts/print-command-index.mjs",
     "help:config": "node scripts/print-command-index.mjs config",
     "help:query": "node scripts/print-command-index.mjs query",
