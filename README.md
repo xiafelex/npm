@@ -44,14 +44,31 @@ npm install -g github:xiafelex/npm
 第一次只需要登记一次命令仓目录：
 
 ```bash
+xnpm locate
 xnpm use /path/to/your/npm-repo
 ```
 
 例如：
 
 ```bash
+xnpm locate
 xnpm use ~/Documents/Codex/npm
 ```
+
+如果这台电脑已经 clone 了 `xiafelex/npm`，但你忘了本地路径，先跑：
+
+```bash
+xnpm locate
+```
+
+它会尽量从常见目录里自动找：
+
+- `~`
+- `~/Documents`
+- `~/Documents/Codex`
+- `~/Desktop`
+- `~/Downloads`
+- `/private/tmp`
 
 之后在任何目录都可以直接跑：
 

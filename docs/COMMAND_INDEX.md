@@ -53,6 +53,7 @@ npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 
 ```bash
 npm install -g github:xiafelex/npm
+xnpm locate
 xnpm use /path/to/your/npm-repo
 xnpm doctor:sync
 ```
@@ -63,6 +64,12 @@ xnpm doctor:sync
 xnpm doctor:sync
 xnpm help:query
 xnpm help:dingtalk-wiki
+```
+
+如果你忘了这台电脑把仓库 clone 到哪里，先跑：
+
+```bash
+xnpm locate
 ```
 
 如果受限环境不允许写 `~/.xnpm`，可以先指定：

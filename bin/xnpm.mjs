@@ -21,6 +21,23 @@ function loadConfig() {
   }
 }
 
+function repoOriginLooksRight(dir) {
+  try {
+    const result = spawnSync("git", ["remote", "get-url", "origin"], {
+      cwd: dir,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    const remote = (result.stdout || "").trim();
+    return (
+      remote.includes("github.com:xiafelex/npm") ||
+      remote.includes("github.com/xiafelex/npm")
+    );
+  } catch {
+    return false;
+  }
+}
+
 function saveConfig(config) {
   try {
     fs.mkdirSync(configDir, { recursive: true });
@@ -40,10 +57,65 @@ function isRepoRoot(dir) {
   if (!fs.existsSync(pkg)) return false;
   try {
     const json = JSON.parse(fs.readFileSync(pkg, "utf8"));
-    return json.scripts && json.scripts["doctor:sync"];
+    return Boolean(json.scripts && json.scripts["doctor:sync"]);
   } catch {
     return false;
   }
+}
+
+function scoreRepoRoot(dir) {
+  if (!isRepoRoot(dir)) return -1;
+  let score = 1;
+  if (repoOriginLooksRight(dir)) score += 10;
+  return score;
+}
+
+function listCandidateRoots() {
+  return [
+    os.homedir(),
+    path.join(os.homedir(), "Documents"),
+    path.join(os.homedir(), "Documents/Codex"),
+    path.join(os.homedir(), "Desktop"),
+    path.join(os.homedir(), "Downloads"),
+    "/private/tmp",
+  ].filter((p, i, arr) => p && arr.indexOf(p) === i && fs.existsSync(p));
+}
+
+function findRepoUnder(root, maxDepth = 3) {
+  const results = [];
+
+  function walk(current, depth) {
+    if (depth > maxDepth) return;
+    let entries;
+    try {
+      entries = fs.readdirSync(current, { withFileTypes: true });
+    } catch {
+      return;
+    }
+
+    const score = scoreRepoRoot(current);
+    if (score > 0) {
+      results.push({ dir: current, score });
+    }
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name === ".git" || entry.name === "node_modules") continue;
+      walk(path.join(current, entry.name), depth + 1);
+    }
+  }
+
+  walk(root, 0);
+  return results;
+}
+
+function autoLocateRepoRoot() {
+  const all = [];
+  for (const root of listCandidateRoots()) {
+    all.push(...findRepoUnder(root, 3));
+  }
+  all.sort((a, b) => b.score - a.score || a.dir.length - b.dir.length);
+  return all[0]?.dir || null;
 }
 
 function resolveRepoRoot() {
@@ -62,6 +134,8 @@ function resolveRepoRoot() {
   }
 
   if (isRepoRoot(packageRoot)) return packageRoot;
+  const auto = autoLocateRepoRoot();
+  if (auto) return auto;
   return null;
 }
 
@@ -70,6 +144,7 @@ function usage() {
 
 Usage:
   xnpm use /path/to/npm-repo
+  xnpm locate
   xnpm where
   xnpm doctor:sync
   xnpm help
@@ -118,6 +193,17 @@ if (cmd === "where") {
     process.exit(1);
   }
   console.log(repoRoot);
+  process.exit(0);
+}
+
+if (cmd === "locate") {
+  const located = autoLocateRepoRoot();
+  if (!located) {
+    console.error("Could not auto-locate xiafelex/npm on this machine.");
+    console.error("Try: xnpm use /path/to/npm");
+    process.exit(1);
+  }
+  console.log(located);
   process.exit(0);
 }
 
