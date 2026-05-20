@@ -49,6 +49,28 @@ npm --prefix "$NPM_CMD_REPO" run help:query
 npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 ```
 
+更推荐的长期方案是装全局入口：
+
+```bash
+npm install -g github:xiafelex/npm
+xnpm use /path/to/your/npm-repo
+xnpm doctor:sync
+```
+
+这样以后不管你在哪个目录，都能直接运行：
+
+```bash
+xnpm doctor:sync
+xnpm help:query
+xnpm help:dingtalk-wiki
+```
+
+如果受限环境不允许写 `~/.xnpm`，可以先指定：
+
+```bash
+export XNPM_CONFIG_DIR=/some/writable/path
+```
+
 ## 最常用入口
 
 ```bash

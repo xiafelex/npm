@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "xnpm": "bin/xnpm.mjs"
+  },
   "scripts": {
     "check": "node scripts/check-config.mjs",
     "doctor": "node scripts/doctor-sync-workspace.mjs",

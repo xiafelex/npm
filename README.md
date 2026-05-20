@@ -33,6 +33,40 @@ npm run help:meeting-minutes
 npm run help:catalog
 ```
 
+## 更通用的方式：全局 `xnpm`
+
+如果你经常在 `~` 或别的任意目录里跑命令，推荐直接装一个全局入口：
+
+```bash
+npm install -g github:xiafelex/npm
+```
+
+第一次只需要登记一次命令仓目录：
+
+```bash
+xnpm use /path/to/your/npm-repo
+```
+
+例如：
+
+```bash
+xnpm use ~/Documents/Codex/npm
+```
+
+之后在任何目录都可以直接跑：
+
+```bash
+xnpm doctor:sync
+xnpm help:dingtalk-wiki
+xnpm help:query
+```
+
+如果你在某些受限环境里，默认写 `~/.xnpm` 失败，可以先指定：
+
+```bash
+export XNPM_CONFIG_DIR=/some/writable/path
+```
+
 上面这些命令有一个前提：
 
 - **你当前就在这个仓库根目录里**
@@ -71,6 +105,8 @@ export NPM_CMD_REPO=~/npm
 npm --prefix "$NPM_CMD_REPO" run doctor:sync
 npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 ```
+
+如果你已经用了 `xnpm use ...`，那以后通常不需要再写 `--prefix`。
 
 `npm run doctor:sync` 会帮你快速判断：
 
