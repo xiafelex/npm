@@ -33,6 +33,22 @@ npm run help:meeting-minutes
 npm run help:catalog
 ```
 
+上面这些命令有一个前提：
+
+- **你当前就在这个仓库根目录里**
+
+如果你不在仓库根目录，比如人在 `~`，请改用：
+
+```bash
+npm --prefix /path/to/npm run doctor:sync
+```
+
+例如：
+
+```bash
+npm --prefix ~/npm run doctor:sync
+```
+
 ## 环境准备
 
 ```bash
@@ -41,6 +57,19 @@ npx playwright install chromium
 cp .env.shared .env
 npm run check
 npm run doctor:sync
+```
+
+如果你不想每次先 `cd`，可以先设置：
+
+```bash
+export NPM_CMD_REPO=~/npm
+```
+
+之后就能在任意目录运行：
+
+```bash
+npm --prefix "$NPM_CMD_REPO" run doctor:sync
+npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 ```
 
 `npm run doctor:sync` 会帮你快速判断：

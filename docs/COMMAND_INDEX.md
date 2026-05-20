@@ -26,6 +26,29 @@ npm run check
 npm run doctor:sync
 ```
 
+注意：
+
+- `npm run ...` 默认要求你当前就在这个仓库根目录
+- 如果你人在别的目录，比如 `~`，要改用：
+
+```bash
+npm --prefix /path/to/npm run doctor:sync
+```
+
+建议先设一个环境变量：
+
+```bash
+export NPM_CMD_REPO=~/npm
+```
+
+这样以后可以在任何目录直接跑：
+
+```bash
+npm --prefix "$NPM_CMD_REPO" run doctor:sync
+npm --prefix "$NPM_CMD_REPO" run help:query
+npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
+```
+
 ## 最常用入口
 
 ```bash
@@ -42,6 +65,14 @@ npm run help:management-innovation
 npm run help:digital-drive
 npm run help:meeting-minutes
 npm run help:catalog
+```
+
+如果不在仓库目录里，对应写法就是：
+
+```bash
+npm --prefix "$NPM_CMD_REPO" run doctor:sync
+npm --prefix "$NPM_CMD_REPO" run help:query
+npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 ```
 
 ## 命令和记忆仓的关系
