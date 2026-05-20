@@ -1,7 +1,20 @@
 # 命令总表
 
 这个仓库现在的定位是：**命令仓**。  
-你不用记住所有脚本名，先按板块找，再复制命令跑。
+你不用记住所有脚本名。以后优先按两种维度找：
+
+1. **按动作找**
+   - 配置
+   - 查询
+   - 抓取
+   - 回传
+2. **按板块找**
+   - 管理创新
+   - 数字驱动
+   - 会议纪要
+   - 技术中心总表
+
+状态和结果仍然在 `ai-memory-vault`，这个仓库只负责“怎么跑”。
 
 ## 先做环境准备
 
@@ -16,11 +29,30 @@ npm run check
 
 ```bash
 npm run help
+npm run help:config
+npm run help:query
+npm run help:fetch
+npm run help:sync
 npm run help:management-innovation
 npm run help:digital-drive
 npm run help:meeting-minutes
 npm run help:catalog
 ```
+
+## 命令和记忆仓的关系
+
+- `npm`
+  - 命令仓
+  - 放 `npm scripts / Playwright 脚本 / 运行说明`
+- `ai-memory-vault`
+  - 状态仓
+  - 放 `raw-md / sync-registry / manifest / report / runbook`
+
+所以通常顺序是：
+
+1. 在 `ai-memory-vault` 看已有状态
+2. 在这个 `npm` 仓里找并执行命令
+3. 再把结果同步回 `ai-memory-vault`
 
 ## 管理创新
 
@@ -133,6 +165,57 @@ npm run report:wiki-content
 npm run export:pdf
 ```
 
+## 按动作分类
+
+### 1. 配置类
+
+第一次换电脑，先跑这些：
+
+```bash
+npm install
+npx playwright install chromium
+cp .env.shared .env
+npm run check
+```
+
+### 2. 查询 / 盘点类
+
+想知道“以前怎么跑过、现在还剩多少、哪些已经在记忆仓里”，先跑这些：
+
+```bash
+npm run registry:management-innovation
+npm run analyze:management-innovation
+npm run report:management-innovation
+npm run analyze:digital-drive-algorithm-group
+npm run report:digital-drive-algorithm-group
+npm run status:meeting-minutes
+npm run index:tech-center
+npm run analyze:tech-center
+npm run report:tech-center
+```
+
+### 3. 抓取 / 下载类
+
+真正打开 DingTalk 页面、导出 Markdown 的，主要是这些：
+
+```bash
+MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto
+PDF_LOAD_FAILURE_RETRY_LIMIT=5 npm run sync:digital-drive-algorithm-group:top20:md
+PDF_LOAD_FAILURE_RETRY_LIMIT=5 npm run round:digital-drive-algorithm-group:20
+npm run sync:meeting-minutes:all:fast
+npm run export:pdf
+```
+
+### 4. 回传 / 同步类
+
+这些命令会把本地结果同步回 `ai-memory-vault`：
+
+```bash
+npm run sync:meeting-minutes:vault:push
+npm run sync:meeting-minutes:all:fast:push
+MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto
+```
+
 ## 规则
 
 1. 先看 `help` 或这个文件，再决定跑哪条。
@@ -140,3 +223,4 @@ npm run export:pdf
 3. UI 抓取默认会按 `nodeId + modifiedTime + needsSync` 避免重复。
 4. 页面加载失败会自动刷新重试，超过上限就跳过并记日志。
 5. 状态仓是 `ai-memory-vault`，这个仓库是执行仓。
+6. 如果你先想到“我要查什么”，先看动作分类；如果你先想到“我要跑哪个板块”，再看板块分类。

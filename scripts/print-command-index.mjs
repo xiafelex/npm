@@ -60,10 +60,51 @@ const sections = {
       "npm run export:pdf",
     ],
   },
+  config: {
+    title: "配置类命令",
+    commands: [
+      "npm install",
+      "npx playwright install chromium",
+      "cp .env.shared .env",
+      "npm run check",
+    ],
+  },
+  query: {
+    title: "查询 / 盘点类命令",
+    commands: [
+      "npm run registry:management-innovation",
+      "npm run analyze:management-innovation",
+      "npm run report:management-innovation",
+      "npm run analyze:digital-drive-algorithm-group",
+      "npm run report:digital-drive-algorithm-group",
+      "npm run status:meeting-minutes",
+      "npm run index:tech-center",
+      "npm run analyze:tech-center",
+      "npm run report:tech-center",
+    ],
+  },
+  fetch: {
+    title: "抓取 / 下载类命令",
+    commands: [
+      "MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto",
+      "PDF_LOAD_FAILURE_RETRY_LIMIT=5 npm run sync:digital-drive-algorithm-group:top20:md",
+      "PDF_LOAD_FAILURE_RETRY_LIMIT=5 npm run round:digital-drive-algorithm-group:20",
+      "npm run sync:meeting-minutes:all:fast",
+      "npm run export:pdf",
+    ],
+  },
+  syncback: {
+    title: "回传 / 同步到记忆仓",
+    commands: [
+      "npm run sync:meeting-minutes:vault:push",
+      "npm run sync:meeting-minutes:all:fast:push",
+      "MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto",
+    ],
+  },
 };
 
 const aliases = {
-  all: ["setup", "management", "digital", "meeting", "catalog", "lowlevel"],
+  all: ["setup", "config", "query", "fetch", "syncback", "management", "digital", "meeting", "catalog", "lowlevel"],
   mi: ["management"],
   management: ["management"],
   dd: ["digital"],
@@ -73,13 +114,18 @@ const aliases = {
   catalog: ["catalog"],
   setup: ["setup"],
   lowlevel: ["lowlevel"],
+  config: ["config"],
+  query: ["query"],
+  fetch: ["fetch"],
+  sync: ["syncback"],
+  syncback: ["syncback"],
 };
 
 const selected = aliases[topic];
 
 if (!selected) {
   console.error(`Unknown topic: ${topic}`);
-  console.error("Available topics: all, setup, management, digital, meeting, catalog, lowlevel");
+  console.error("Available topics: all, setup, config, query, fetch, sync, management, digital, meeting, catalog, lowlevel");
   process.exit(1);
 }
 

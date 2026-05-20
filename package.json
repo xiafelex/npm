@@ -6,6 +6,10 @@
   "scripts": {
     "check": "node scripts/check-config.mjs",
     "help": "node scripts/print-command-index.mjs",
+    "help:config": "node scripts/print-command-index.mjs config",
+    "help:query": "node scripts/print-command-index.mjs query",
+    "help:fetch": "node scripts/print-command-index.mjs fetch",
+    "help:sync": "node scripts/print-command-index.mjs sync",
     "help:management-innovation": "node scripts/print-command-index.mjs management",
     "help:digital-drive": "node scripts/print-command-index.mjs digital",
     "help:meeting-minutes": "node scripts/print-command-index.mjs meeting",

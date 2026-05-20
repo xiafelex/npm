@@ -19,6 +19,10 @@
 
 ```bash
 npm run help
+npm run help:config
+npm run help:query
+npm run help:fetch
+npm run help:sync
 npm run help:management-innovation
 npm run help:digital-drive
 npm run help:meeting-minutes
@@ -78,6 +82,21 @@ npm run status:meeting-minutes
 - `ai-memory-vault`
   - 状态仓
   - 放 `raw-md / sync-registry / report / runbook`
+
+## 怎么分类找命令
+
+以后优先按两条线找：
+
+1. 按动作：
+   - `npm run help:config`
+   - `npm run help:query`
+   - `npm run help:fetch`
+   - `npm run help:sync`
+2. 按板块：
+   - `npm run help:management-innovation`
+   - `npm run help:digital-drive`
+   - `npm run help:meeting-minutes`
+   - `npm run help:catalog`
 
 ## 原则
 
