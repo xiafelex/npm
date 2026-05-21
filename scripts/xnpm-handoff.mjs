@@ -174,5 +174,5 @@ console.log(`- output: ${outputPath}`);
 console.log("");
 console.log("Next step in ai-memory-vault:");
 console.log(
-  `python3 -m src.ai_memory.cli capture-handoff --device-id ${manifest.device_id} --sandbox-id ${manifest.sandbox_id} --title "${manifest.title}" --kind ${manifest.kind} --sources "${sources.join(",")}"`
+  `python3 -m src.ai_memory.cli import-handoff-manifest --manifest ${outputPath}`
 );
