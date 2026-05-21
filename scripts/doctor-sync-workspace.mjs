@@ -303,6 +303,7 @@ const commandRepo = gitSummary(repoRoot);
 const memoryVaultDir = findMemoryVaultDir();
 const memoryRepo = memoryVaultDir ? gitSummary(memoryVaultDir) : null;
 const env = envSummary(repoRoot);
+const remoteRunPrefix = "npm exec --yes github:xiafelex/npm --";
 
 const sections = [
   sectionSummary(workspaceRoot || repoRoot, "技术中心-全库", "技术中心总表", "技术中心-全库"),
@@ -383,7 +384,7 @@ if (!workspaceRoot) {
 if (!memoryRepo) {
   console.log("  - 先设置 MEMORY_VAULT_DIR，避免回传状态时找不到记忆仓");
 }
-console.log("  - 想查现在还能抓什么：npm run help:query");
-console.log("  - 想看钉钉知识库类命令：npm run help:dingtalk-wiki");
-console.log("  - 想看钉钉日志类命令：npm run help:dingtalk-logs");
-console.log("  - 想看钉钉会议纪要类命令：npm run help:dingtalk-meeting");
+console.log(`  - 想查现在还能抓什么：${remoteRunPrefix} help:query`);
+console.log(`  - 想看钉钉知识库类命令：${remoteRunPrefix} help:dingtalk-wiki`);
+console.log(`  - 想看钉钉日志类命令：${remoteRunPrefix} help:dingtalk-logs`);
+console.log(`  - 想看钉钉会议纪要类命令：${remoteRunPrefix} help:dingtalk-meeting`);
