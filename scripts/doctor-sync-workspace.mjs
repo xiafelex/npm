@@ -159,9 +159,10 @@ function findWorkspaceUnder(root, maxDepth = 4) {
   return results;
 }
 
-function autoLocateWorkspaceRoot(commandRepoDir) {
+function autoLocateWorkspaceCandidates(commandRepoDir) {
   const candidates = [
     process.env.SYNC_WORKSPACE_DIR,
+    process.cwd(),
     commandRepoDir,
     os.homedir(),
     path.join(os.homedir(), "Documents"),
@@ -180,7 +181,12 @@ function autoLocateWorkspaceRoot(commandRepoDir) {
     all.push(...findWorkspaceUnder(root, 4));
   }
   all.sort((a, b) => b.score - a.score || a.dir.length - b.dir.length);
-  return all[0]?.dir || null;
+  const seen = new Set();
+  return all.filter((item) => {
+    if (seen.has(item.dir)) return false;
+    seen.add(item.dir);
+    return true;
+  });
 }
 
 function parseDotEnv(filePath) {
@@ -397,7 +403,8 @@ function buildRecommendations({ env, workspaceRoot, memoryRepo, sections }) {
 
 const cwd = process.cwd();
 const repoRoot = autoLocateRepoRoot() || (isRepoRoot(packageRoot) ? packageRoot : cwd);
-const workspaceRoot = autoLocateWorkspaceRoot(repoRoot);
+const workspaceCandidates = autoLocateWorkspaceCandidates(repoRoot);
+const workspaceRoot = workspaceCandidates[0]?.dir || null;
 const commandRepo = gitSummary(repoRoot);
 const memoryVaultDir = findMemoryVaultDir();
 const memoryRepo = memoryVaultDir ? gitSummary(memoryVaultDir) : null;
@@ -437,9 +444,14 @@ if (commandRepo) {
 }
 console.log("");
 
-console.log("2. 执行工作区");
+console.log("2. 当前对话目录");
+console.log(`  - cwd: ${cwd}`);
+console.log(`  - looks like workspace: ${isWorkspaceRoot(cwd) ? "yes" : "no"}`);
+console.log("");
+
+console.log("3. 执行工作区");
 if (workspaceRoot) {
-  console.log(`  - path: ${workspaceRoot}`);
+  console.log(`  - selected: ${workspaceRoot}`);
   console.log(`  - data/wiki-sections: ${exists(path.join(workspaceRoot, "data", "wiki-sections")) ? "yes" : "no"}`);
   console.log(`  - docs/wiki-md: ${exists(path.join(workspaceRoot, "docs", "wiki-md")) ? "yes" : "no"}`);
 } else {
@@ -448,7 +460,21 @@ if (workspaceRoot) {
 }
 console.log("");
 
-console.log("3. 记忆仓");
+console.log("4. 其他执行工作区候选");
+if (workspaceCandidates.length > 0) {
+  workspaceCandidates.slice(0, 8).forEach((item, index) => {
+    const marker = item.dir === workspaceRoot ? "*" : "-";
+    console.log(`  ${marker} ${index + 1}. ${item.dir} (score=${item.score})`);
+  });
+  if (workspaceCandidates.length > 8) {
+    console.log(`  - 其余 ${workspaceCandidates.length - 8} 个候选已省略`);
+  }
+} else {
+  console.log("  - none");
+}
+console.log("");
+
+console.log("5. 记忆仓");
 if (memoryRepo) {
   console.log(`  - path: ${memoryRepo.repoDir}`);
   console.log(`  - branch: ${memoryRepo.branch}`);
@@ -461,13 +487,13 @@ if (memoryRepo) {
 }
 console.log("");
 
-console.log("4. 环境变量");
+console.log("6. 环境变量");
 for (const item of env) {
   console.log(`  - ${item.name}: ${item.present ? `present via ${item.source} (len=${item.length})` : "missing"}`);
 }
 console.log("");
 
-console.log("5. 本地板块状态");
+console.log("7. 本地板块状态");
 for (const section of sections) {
   console.log(`  - ${section.label}`);
   console.log(`    registry: ${section.hasRegistry ? "yes" : "no"}`);
@@ -479,12 +505,15 @@ for (const section of sections) {
 }
 console.log("");
 
-console.log("6. 建议");
+console.log("8. 建议");
 if (!env.every((item) => item.present)) {
   console.log("  - 先补 .env，再跑抓取命令");
 }
 if (!workspaceRoot) {
   console.log("  - 先设置 SYNC_WORKSPACE_DIR，避免查不到真正的执行工作区");
+}
+if (workspaceCandidates.length > 1) {
+  console.log("  - 这台机器上发现了多个执行工作区候选；如果你想分析别的对话/沙箱，请先 export SYNC_WORKSPACE_DIR=/目标工作区");
 }
 if (!memoryRepo) {
   console.log("  - 先设置 MEMORY_VAULT_DIR，避免回传状态时找不到记忆仓");
@@ -494,7 +523,7 @@ console.log(`  - 想看钉钉知识库类命令：${remoteRunPrefix} help:dingta
 console.log(`  - 想看钉钉日志类命令：${remoteRunPrefix} help:dingtalk-logs`);
 console.log(`  - 想看钉钉会议纪要类命令：${remoteRunPrefix} help:dingtalk-meeting`);
 console.log("");
-console.log("7. 当前更推荐先做什么");
+console.log("9. 当前更推荐先做什么");
 recommendations.forEach((rec, index) => {
   console.log(`  ${index + 1}. ${rec.title}`);
   console.log(`     ${rec.why}`);
