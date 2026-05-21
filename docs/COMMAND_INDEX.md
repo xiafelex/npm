@@ -64,6 +64,7 @@ xnpm doctor:sync
 xnpm doctor:sync
 xnpm help:query
 xnpm help:dingtalk-wiki
+xnpm handoff --device-id macbook-primary --sandbox-id codex-desktop --title "这次增量标题" --kind evidence --sources "docs/wiki-md/管理创新"
 ```
 
 如果你忘了这台电脑把仓库 clone 到哪里，先跑：
@@ -131,6 +132,17 @@ npm --prefix "$NPM_CMD_REPO" run help:dingtalk-wiki
 2. 在这个 `npm` 仓先跑 `npm run doctor:sync`
 3. 再找并执行命令
 4. 再把结果同步回 `ai-memory-vault`
+
+如果你已经明确这批结果只是“待吸收增量”，也可以先生成 handoff manifest，再交给主记忆仓后续吸收：
+
+```bash
+xnpm handoff \
+  --device-id macbook-primary \
+  --sandbox-id codex-desktop \
+  --title "这次增量标题" \
+  --kind evidence \
+  --sources "docs/wiki-md/管理创新"
+```
 
 ## 管理创新
 

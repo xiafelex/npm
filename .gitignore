@@ -5,3 +5,4 @@ data/**/*.tmp
 logs/
 .auth/
 docs/wiki-pdf/
+tmp/xnpm-handoff/

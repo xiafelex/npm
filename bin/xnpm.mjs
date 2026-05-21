@@ -147,6 +147,7 @@ Usage:
   xnpm locate
   xnpm where
   xnpm doctor:sync
+  xnpm handoff --device-id ... --sandbox-id ... --title ... --kind ... --sources ...
   xnpm help
   xnpm help:dingtalk-wiki
 
@@ -217,7 +218,11 @@ if (!repoRoot) {
 }
 
 const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
-const result = spawnSync(npmCmd, ["run", cmd, ...rest], {
+const npmArgs = ["run", cmd];
+if (rest.length > 0) {
+  npmArgs.push("--", ...rest);
+}
+const result = spawnSync(npmCmd, npmArgs, {
   cwd: repoRoot,
   stdio: "inherit",
   env: process.env,

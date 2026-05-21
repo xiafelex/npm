@@ -101,6 +101,7 @@ const sections = {
       { cmd: "npm run sync:meeting-minutes:vault:push", note: "仅回传会议纪要结果到记忆仓" },
       { cmd: "npm run sync:meeting-minutes:all:fast:push", note: "会议纪要抓取完成后立刻回传" },
       { cmd: "MI_VAULT_GIT_COMMIT=1 MI_VAULT_GIT_PUSH=1 npm run sync:management-innovation:auto", note: "管理创新抓取过程中自动 commit/push 到记忆仓" },
+      { cmd: "xnpm handoff --device-id ... --sandbox-id ... --title ... --kind evidence --sources ...", note: "把某次命令执行结果登记成可被主记忆仓吸收的 handoff manifest" },
     ],
   },
   dingtalkWiki: {

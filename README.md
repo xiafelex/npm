@@ -76,6 +76,7 @@ xnpm locate
 xnpm doctor:sync
 xnpm help:dingtalk-wiki
 xnpm help:query
+xnpm handoff --device-id macbook-primary --sandbox-id codex-desktop --title "这次增量标题" --kind evidence --sources "docs/wiki-md/管理创新"
 ```
 
 如果你在某些受限环境里，默认写 `~/.xnpm` 失败，可以先指定：
@@ -145,6 +146,34 @@ export PDF_BROWSER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/Mac
 ```bash
 export SYNC_WORKSPACE_DIR=/path/to/your/workspace
 ```
+
+## 把结果交回主记忆仓
+
+如果某次命令执行完，你已经知道这批结果应该作为证据层或主题更新候选交回主记忆仓，可以先生成一个 handoff manifest：
+
+```bash
+xnpm handoff \
+  --device-id macbook-primary \
+  --sandbox-id codex-desktop \
+  --title "管理创新前两层本轮抓取" \
+  --kind evidence \
+  --sources "docs/wiki-md/管理创新-前两层,docs/wiki/管理创新-前两层" \
+  --source-command "npm run sync:management-innovation:top20:md" \
+  --target-layer "memory/imports" \
+  --target-file "memory/imports/dingtalk/tech_center/management_innovation"
+```
+
+默认会在当前仓库写出一个 `tmp/xnpm-handoff/<slug>.json`，里面包含：
+
+- `device_id`
+- `sandbox_id`
+- `kind`
+- `sources`
+- `source_command`
+- `target_layer`
+- `target_file`
+
+这个命令不会直接改长期主记忆，只负责把执行结果描述清楚，方便后续交给 `ai-memory-vault` 做 handoff / intake / review / promote。
 
 ## 最常用命令
 
