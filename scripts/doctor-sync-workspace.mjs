@@ -296,6 +296,105 @@ function sectionSummary(baseDir, name, label, manifestDir) {
   };
 }
 
+function portable(cmd) {
+  return `npm exec --yes github:xiafelex/npm -- ${cmd}`;
+}
+
+function buildRecommendations({ env, workspaceRoot, memoryRepo, sections }) {
+  const recs = [];
+  const envMissing = env.filter((item) => !item.present).map((item) => item.name);
+
+  if (envMissing.length > 0) {
+    recs.push({
+      priority: 100,
+      title: "先补环境变量",
+      why: `当前缺少 ${envMissing.join(", ")}，先补环境再抓取更稳。`,
+      cmd: null,
+    });
+  }
+
+  if (!workspaceRoot) {
+    recs.push({
+      priority: 95,
+      title: "先指定执行工作区",
+      why: "doctor 还没定位到真正跑数据的工作区，后面的板块状态会不准。",
+      cmd: "export SYNC_WORKSPACE_DIR=/path/to/your/workspace",
+    });
+  }
+
+  if (!memoryRepo) {
+    recs.push({
+      priority: 90,
+      title: "先指定记忆仓",
+      why: "如果后面要回传状态，先让脚本知道 ai-memory-vault 在哪。",
+      cmd: "export MEMORY_VAULT_DIR=/path/to/ai-memory-vault",
+    });
+  }
+
+  const byName = Object.fromEntries(sections.map((s) => [s.name, s]));
+  const mi = byName["管理创新"];
+  const ddGroup = byName["数字驱动-数据算法研究组"];
+  const center = byName["中心办公"];
+  const meeting = byName["中心办公-会议培训-公司职能部门月度汇报"];
+  const tech = byName["技术中心-全库"];
+
+  if (mi?.readyToGrab > 0) {
+    recs.push({
+      priority: 80,
+      title: "这台电脑适合继续跑管理创新",
+      why: `管理创新当前 readyToGrab=${mi.readyToGrab}，是最明显还可以继续推进的一条线。`,
+      cmd: portable("help:management-innovation"),
+    });
+  }
+
+  if (center?.readyToGrab > 0) {
+    recs.push({
+      priority: 70,
+      title: "中心办公也有可继续处理内容",
+      why: `中心办公当前 readyToGrab=${center.readyToGrab}，适合做下一批正文抓取。`,
+      cmd: portable("help:catalog"),
+    });
+  }
+
+  if (ddGroup && ddGroup.pending != null && ddGroup.pending <= 5 && ddGroup.pending > 0) {
+    recs.push({
+      priority: 75,
+      title: "数字驱动-数据算法研究组快收尾了",
+      why: `这个工作集只剩 pending=${ddGroup.pending}，很适合顺手收尾。`,
+      cmd: portable("help:digital-drive"),
+    });
+  }
+
+  if (meeting?.hasRegistry) {
+    recs.push({
+      priority: 55,
+      title: "会议纪要链路已经具备状态",
+      why: "如果你想跑一个更轻的专项流，会议纪要是相对独立的一条。 ",
+      cmd: portable("help:dingtalk-meeting"),
+    });
+  }
+
+  if (tech?.hasRegistry) {
+    recs.push({
+      priority: 50,
+      title: "想先全局摸底，就看技术中心总表",
+      why: "技术中心总表台账已经存在，适合作为全局盘点入口。",
+      cmd: portable("help:query"),
+    });
+  }
+
+  if (recs.length === 0) {
+    recs.push({
+      priority: 10,
+      title: "先看查询命令",
+      why: "当前没有明显的单一优先项，先看查询类命令最稳。",
+      cmd: portable("help:query"),
+    });
+  }
+
+  return recs.sort((a, b) => b.priority - a.priority).slice(0, 4);
+}
+
 const cwd = process.cwd();
 const repoRoot = autoLocateRepoRoot() || (isRepoRoot(packageRoot) ? packageRoot : cwd);
 const workspaceRoot = autoLocateWorkspaceRoot(repoRoot);
@@ -314,6 +413,12 @@ const sections = [
   sectionSummary(workspaceRoot || repoRoot, "中心办公", "中心办公", "中心办公"),
   sectionSummary(workspaceRoot || repoRoot, "中心办公-会议培训-公司职能部门月度汇报", "会议纪要", "中心办公-会议培训-公司职能部门月度汇报"),
 ];
+const recommendations = buildRecommendations({
+  env,
+  workspaceRoot,
+  memoryRepo,
+  sections,
+});
 
 console.log("Multi-device Sync Doctor");
 console.log("");
@@ -388,3 +493,10 @@ console.log(`  - 想查现在还能抓什么：${remoteRunPrefix} help:query`);
 console.log(`  - 想看钉钉知识库类命令：${remoteRunPrefix} help:dingtalk-wiki`);
 console.log(`  - 想看钉钉日志类命令：${remoteRunPrefix} help:dingtalk-logs`);
 console.log(`  - 想看钉钉会议纪要类命令：${remoteRunPrefix} help:dingtalk-meeting`);
+console.log("");
+console.log("7. 当前更推荐先做什么");
+recommendations.forEach((rec, index) => {
+  console.log(`  ${index + 1}. ${rec.title}`);
+  console.log(`     ${rec.why}`);
+  if (rec.cmd) console.log(`     ${rec.cmd}`);
+});
